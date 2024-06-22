@@ -24,6 +24,20 @@ def get_past_logs():
 def log_activity(status, group, activity):
     worksheet.append_row([datetime.now().strftime("%m/%d"),datetime.now().strftime("%H:%M"), status, group ,activity])
 
+#ポップアップ表示関数
+def popup():
+
+#ポモドーロサイクル
+def pomodoro_cycle(work_time,break_time):
+    #作業開始のポップアップを表示し、作業時間の計測を開始する関数を呼び出す
+    def show_work_popup():
+    #作業時間の計測を開始し、経過後休息開始のポップアップを表示関数を呼び出す
+    def start_work():
+    #休息開始のポップアップを表示し、休息時間の計測を開始する関数を呼び出す
+    def show_break_popup():
+    #休息時間の計測を開始し、経過後作業開始のポップアップを表示関数を呼び出す
+    def start_break():
+
 if __name__ == "__main__":
     print(get_past_logs())
     log_activity("Done", "作業効率", "GitのIssueテンプレートの作成")
