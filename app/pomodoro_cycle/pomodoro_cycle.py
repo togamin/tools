@@ -26,7 +26,7 @@ def log_activity(status, group, activity):
     worksheet.append_row([datetime.now().strftime("%m/%d"),datetime.now().strftime("%H:%M"), status, group ,activity])
 
 #ポップアップ表示関数
-def popup(callback):
+def popup(status,callback):
     #メインウィンドウを作成
     popup_root = tk.Tk()
     popup_root.title("Pomodoro App")
@@ -43,8 +43,8 @@ def popup(callback):
     frame.pack(padx=10, pady=10)
     
     # ラベルと入力欄を横並びで作成
-    labels = ["Group:", "Goal＆Done:"]
-    entry_widths = [5, 40]
+    labels = ["グループ:", "内容:"]
+    entry_widths = [7, 40]
     entries = []
     for label, width in zip(labels, entry_widths):
         lbl = ttk.Label(frame, text=label)
@@ -62,6 +62,7 @@ def popup(callback):
         group = entries[0].get()
         activity = entries[1].get()
         if activity:
+            log_activity(status, group, activity)
             messagebox.showinfo("ポモドーロタイマー", "ログが保存されました")
             popup_root.quit()
             popup_root.destroy()
@@ -79,19 +80,17 @@ def pomodoro_cycle(work_time,break_time):
     
     #作業開始のポップアップを表示し、作業時間の計測を開始する関数を呼び出す
     def show_work_popup():
-        print("a")
-        popup(start_work)
+        popup("Goal",start_work)
     #作業時間の計測を開始し、経過後休息開始のポップアップを表示関数を呼び出す
     def start_work():
-        print("b")
+        print(datetime.now().strftime("%m/%d-%H:%M")+"作業開始")
         root.after(work_time, show_break_popup)  # 作業時間後に休息時間を開始
     #休息開始のポップアップを表示し、休息時間の計測を開始する関数を呼び出す
     def show_break_popup():
-        print("c")
-        popup(start_break)
+        popup("Done",start_break)
     #休息時間の計測を開始し、経過後作業開始のポップアップを表示関数を呼び出す
     def start_break():
-        print("d")
+        print(datetime.now().strftime("%m/%d-%H:%M")+"休息開始")
         root.after(break_time, show_work_popup)
     show_work_popup()
     root.mainloop()
