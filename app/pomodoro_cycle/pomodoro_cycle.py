@@ -33,7 +33,7 @@ def popup(status,callback):
     screen_width = popup_root.winfo_screenwidth()
     screen_height = popup_root.winfo_screenheight()
     window_width = 700
-    window_height = 400
+    window_height = 300
     position_right = int(screen_width/2 - window_width/2)
     position_top= int(screen_height/2 - window_height/2)
     popup_root.geometry(f"{window_width}x{window_height}+{position_right}+{position_top}")
@@ -70,6 +70,31 @@ def popup(status,callback):
         else:
             messagebox.showinfo("ポモドーロタイマー", "作業内容が入力されていません")
 
+    #過去ログ取得
+    past_logs = get_past_logs()
+
+    # Treeviewのスタイルを設定
+    style = ttk.Style()
+    style.theme_use("alt")
+    style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"))
+    style.configure("Treeview", font=("Helvetica", 10), rowheight=25)
+
+    # Treeviewウィジェットの作成
+    columns = [f"#{i+1}" for i in range(len(past_logs[0]))]
+    tree = ttk.Treeview(popup_root, columns=columns, show='headings')
+
+    # ヘッダーの設定とカラム幅の設定
+    for idx, col in enumerate(worksheet.row_values(1)):
+        tree.heading(columns[idx], text=col)
+        column_widths = [50, 50, 50, 100, 300, 300]
+        tree.column(columns[idx], width=column_widths[idx])
+
+    # データの挿入
+    for row in past_logs[1:]:
+        tree.insert("", tk.END, values=row)
+
+    tree.pack(expand=True, fill='both')
+
     #イベントループの開始
     popup_root.mainloop()
 
@@ -96,6 +121,4 @@ def pomodoro_cycle(work_time,break_time):
     root.mainloop()
 
 if __name__ == "__main__":
-    print(get_past_logs())
     pomodoro_cycle(10000,10000)
-    log_activity("Done", "作業効率", "テスト")
