@@ -22,8 +22,8 @@ def get_past_logs():
     return last_10_rows
 
 #スプレッドシートにログを書き込む
-def log_activity(status, group, activity):
-    worksheet.append_row([datetime.now().strftime("%m/%d"),datetime.now().strftime("%H:%M"), status, group ,activity])
+def log_activity(status, group, activity, note):
+    worksheet.append_row([datetime.now().strftime("%m/%d"),datetime.now().strftime("%H:%M"), status, group ,activity, note])
 
 #ポップアップ表示関数
 def popup(status,callback):
@@ -38,31 +38,44 @@ def popup(status,callback):
     position_top= int(screen_height/2 - window_height/2)
     popup_root.geometry(f"{window_width}x{window_height}+{position_right}+{position_top}")
 
-    # 横並びのフレームを作成
-    frame = ttk.Frame(popup_root)
-    frame.pack(padx=10, pady=10)
+    # 画面上部のフレームの作成
+    frame_top = ttk.Frame(popup_root)
+    frame_top.pack(padx=3,pady=3,fill=tk.BOTH, expand=True)
     
-    # ラベルと入力欄を横並びで作成
-    labels = ["グループ:", "内容:"]
-    entry_widths = [7, 40]
-    entries = []
-    for label, width in zip(labels, entry_widths):
-        lbl = ttk.Label(frame, text=label)
-        lbl.pack(side=tk.LEFT, padx=5)
-        
-        entry = ttk.Entry(frame, width=width)
-        entry.pack(side=tk.LEFT, padx=5)
-        entries.append(entry)
+    # グリッドの列幅を調整
+    frame_top.grid_columnconfigure(0, weight=1)
+    frame_top.grid_columnconfigure(1, weight=1)
+    frame_top.grid_columnconfigure(2, weight=1)
+    frame_top.grid_columnconfigure(3, weight=1)
+
+    # グループ
+    label_group = ttk.Label(frame_top, text="グループ：")
+    entry_group = ttk.Entry(frame_top)
+    label_group.grid(row = 0, column = 0, sticky=tk.W, padx=1, pady=1)
+    entry_group.grid(row = 0, column = 1, columnspan=1, sticky=tk.W + tk.E, padx=1, pady=1)
+
+    # 内容
+    label_activity = ttk.Label(frame_top, text="内容：")
+    entry_activity = ttk.Entry(frame_top)
+    label_activity.grid(row = 1, column = 0, sticky=tk.W, padx=1, pady=1)
+    entry_activity.grid(row=1, column=1, columnspan=2, sticky=tk.W + tk.E, padx=1, pady=1)
+
+    # note欄作成
+    label_note = ttk.Label(frame_top, text="note：")
+    entry_note = ttk.Entry(frame_top)
+    label_note.grid(row=2, column=0, sticky=tk.W, padx=1, pady=1)
+    entry_note.grid(row=2, column=1, columnspan=2, sticky=tk.W + tk.E, padx=1, pady=1)
     
     # ボタンを追加
-    button = ttk.Button(frame, text="OK", command=lambda: on_ok(entries))
-    button.pack(pady=10)
+    button = ttk.Button(frame_top, text="OK", command=lambda: on_ok())
+    button.grid(row=2, column=3, sticky=tk.W + tk.E + tk.N + tk.S, padx=1, pady=1)
 
-    def on_ok(entries):
-        group = entries[0].get()
-        activity = entries[1].get()
+    def on_ok():
+        group = entry_group.get()
+        activity = entry_activity.get()
+        note = entry_note.get()
         if activity:
-            log_activity(status, group, activity)
+            log_activity(status, group, activity, note)
             messagebox.showinfo("ポモドーロタイマー", "ログが保存されました")
             popup_root.quit()
             popup_root.destroy()
