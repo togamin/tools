@@ -50,9 +50,14 @@ def popup(status,callback):
 
     # グループ
     label_group = ttk.Label(frame_top, text="グループ：")
-    entry_group = ttk.Entry(frame_top)
     label_group.grid(row = 0, column = 0, sticky=tk.W, padx=1, pady=1)
-    entry_group.grid(row = 0, column = 1, columnspan=1, sticky=tk.W + tk.E, padx=1, pady=1)
+    #グループプルダウン
+    options = ["AWS", "作業効率", "暮らし", "組織"]
+    selected_option = tk.StringVar()
+    selected_option.set(options[0])
+    dropdown = ttk.Combobox(frame_top, textvariable=selected_option, values=options)
+    dropdown.grid(row = 0, column = 1, columnspan=1, sticky=tk.W, padx=1, pady=1)
+    
 
     # 内容
     label_activity = ttk.Label(frame_top, text="内容：")
@@ -71,7 +76,7 @@ def popup(status,callback):
     button.grid(row=2, column=3, sticky=tk.W + tk.E + tk.N + tk.S, padx=1, pady=1)
 
     def on_ok():
-        group = entry_group.get()
+        group = selected_option.get()
         activity = entry_activity.get()
         note = entry_note.get()
         if activity:
@@ -134,4 +139,6 @@ def pomodoro_cycle(work_time,break_time):
     root.mainloop()
 
 if __name__ == "__main__":
-    pomodoro_cycle(10000,10000)
+    work_time = 25
+    break_time = 5
+    pomodoro_cycle(work_time*1000*60,break_time*1000*60)
