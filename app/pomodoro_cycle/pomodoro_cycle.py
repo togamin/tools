@@ -3,6 +3,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import tkinter as tk
 from tkinter import ttk, messagebox
+import webbrowser
 
 #スプレッドシートへの認証情報の設定
 CREDENTIALS_FILE = 'config/credentials.json'
@@ -29,7 +30,7 @@ def log_activity(status, group, activity, note):
 def popup(status,callback):
     #メインウィンドウを作成
     popup_root = tk.Tk()
-    popup_root.title("Pomodoro App")
+    popup_root.title("Pomodoro App：" + status)
     screen_width = popup_root.winfo_screenwidth()
     screen_height = popup_root.winfo_screenheight()
     window_width = 700
@@ -58,12 +59,16 @@ def popup(status,callback):
     dropdown = ttk.Combobox(frame_top, textvariable=selected_option, values=options)
     dropdown.grid(row = 0, column = 1, columnspan=1, sticky=tk.W, padx=1, pady=1)
     
-
     # 内容
     label_activity = ttk.Label(frame_top, text="内容：")
     entry_activity = ttk.Entry(frame_top)
     label_activity.grid(row = 1, column = 0, sticky=tk.W, padx=1, pady=1)
     entry_activity.grid(row=1, column=1, columnspan=2, sticky=tk.W + tk.E, padx=1, pady=1)
+
+    # リンクテキストを表示するラベルの作成
+    label_link = tk.Label(frame_top, text="manage", fg="blue", cursor="hand2")
+    label_link.grid(row=1, column=3, sticky=tk.W, padx=1, pady=1)
+    label_link.bind("<Button-1>", lambda event: webbrowser.open_new("https://docs.google.com/spreadsheets/d/13C85GhAOHaupRcu92eukCZJljL_Exc41KBMxQWZn6z4/edit?gid=1640641878#gid=1640641878"))
 
     # note欄作成
     label_note = ttk.Label(frame_top, text="note：")
