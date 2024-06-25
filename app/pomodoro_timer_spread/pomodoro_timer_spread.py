@@ -55,9 +55,14 @@ def popup(status,callback):
     #グループプルダウン
     options = ["AWS", "作業効率", "暮らし", "組織"]
     selected_option = tk.StringVar()
-    selected_option.set(options[0])
     dropdown = ttk.Combobox(frame_top, textvariable=selected_option, values=options)
     dropdown.grid(row = 0, column = 1, columnspan=1, sticky=tk.W, padx=1, pady=1)
+    # 選択されたオプションをテキスト入力フィールドに反映する関数
+    def update_select_data(event):
+        selected_data = dropdown.get()
+        print(f"関数が呼び出されました。選択された値: {selected_data}")
+    # プルダウンメニューの変更を検出するイベントバインド
+    dropdown.bind("<<ComboboxSelected>>", update_select_data)
     
     # 内容
     label_activity = ttk.Label(frame_top, text="内容：")
@@ -81,7 +86,7 @@ def popup(status,callback):
     button.grid(row=2, column=3, sticky=tk.W + tk.E + tk.N + tk.S, padx=1, pady=1)
 
     def on_ok():
-        group = selected_option.get()
+        group = selected_data
         activity = entry_activity.get()
         note = entry_note.get()
         if activity:
